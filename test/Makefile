@@ -70,3 +70,6 @@ kthread_test2:kthread_test2.c ../kthread.c
 
 ketopt_test:ketopt_test.c ../ketopt.h
 		$(CC) $(CFLAGS) -o $@ ketopt_test.c
+
+kbarena_test:kbarena_test.c ../kbarena.h ../kbarena.c
+		$(CC) $(CFLAGS) -o $@ $< ../kbarena.c

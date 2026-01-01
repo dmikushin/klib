@@ -1,0 +1,15 @@
+@PACKAGE_INIT@
+
+# klib CMake configuration file
+#
+# This file allows downstream projects to find and use klib components.
+#
+# Usage:
+#   find_package(klib REQUIRED)
+#   target_link_libraries(my_target klib::klib-headers)  # For header-only
+#   target_link_libraries(my_target klib::klib-kalloc)   # For specific component
+#   target_link_libraries(my_target klib::klib-all)      # For all components
+
+include("${CMAKE_CURRENT_LIST_DIR}/klibTargets.cmake")
+
+check_required_components(klib)

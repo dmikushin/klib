@@ -16,6 +16,58 @@ languages, in terms of both speed and memory use.
 A new documentation is available [here](http://attractivechaos.github.io/klib/)
 which includes most information in this README file.
 
+## <a name="building"></a>Building with CMake
+
+Klib now includes a CMake build system that provides an alternative to copying individual files. The CMake configuration follows klib's philosophy of modularity and minimal dependencies:
+
+### Quick Start
+
+```bash
+mkdir build && cd build
+cmake ..
+make
+ctest  # Run tests
+```
+
+### Installation
+
+```bash
+cmake --install . --prefix /path/to/install
+```
+
+### Using klib in Your CMake Project
+
+After installation, you can use klib in your project:
+
+```cmake
+find_package(klib REQUIRED)
+
+# For header-only components only
+target_link_libraries(your_target PRIVATE klib::klib-headers)
+
+# For specific compiled components (kalloc, kstring, etc.)
+target_link_libraries(your_target PRIVATE klib::klib-kalloc klib::klib-kstring)
+
+# For all components
+target_link_libraries(your_target PRIVATE klib::klib-all)
+```
+
+### CMake Options
+
+- `KLIB_BUILD_TESTS` (default: ON) - Build test suite
+- `KLIB_BUILD_COMPONENTS` (default: ON) - Build compiled components (.c files)
+- `KLIB_INSTALL` (default: ON) - Enable installation
+
+### Library Structure
+
+The CMake build provides:
+
+- **klib-headers**: INTERFACE library for all header-only components (khash, kbtree, kavl, ksort, kvec, klist, ketopt, etc.)
+- **Component libraries**: Individual OBJECT libraries for each .c file (kalloc, kbarena, kstring, kmath, ksa, knetfile, kopen, khmm, ksw, knhx)
+- **klib-all**: Convenience library that includes all components
+
+This modular approach allows you to link only the components you need, maintaining klib's lightweight philosophy.
+
 #### Common components
 
 * [khash.h][khash]: generic [hash table][2] with open addressing.

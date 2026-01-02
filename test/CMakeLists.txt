@@ -44,9 +44,9 @@ if(ZLIB_FOUND)
         ARGS ${CMAKE_CURRENT_SOURCE_DIR}/kseq_test.dat)
     add_klib_test(kseq_bench SOURCES kseq_bench.c
         LIBRARIES ZLIB::ZLIB
-        ARGS ${CMAKE_CURRENT_SOURCE_DIR}/kseq_bench_data.txt.gz)
+        ARGS ${CMAKE_CURRENT_SOURCE_DIR}/kseq_test_data.txt.gz)
     add_klib_test(kseq_bench2 SOURCES kseq_bench2.c
-        ARGS ${CMAKE_CURRENT_SOURCE_DIR}/kseq_bench_data.txt)
+        ARGS ${CMAKE_CURRENT_SOURCE_DIR}/kseq_test_data.txt)
 endif()
 
 # C++ tests (for C++ compatibility)
@@ -93,7 +93,7 @@ if(KLIB_BUILD_COMPONENTS)
         add_klib_test(kthread_test2
             SOURCES kthread_test2.c
             LIBRARIES klib-kthread Threads::Threads
-            ARGS ${CMAKE_CURRENT_SOURCE_DIR}/kseq_bench_data.txt
+            ARGS ${CMAKE_CURRENT_SOURCE_DIR}/kseq_test_data.txt
         )
     endif()
 endif()

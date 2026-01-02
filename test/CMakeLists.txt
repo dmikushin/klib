@@ -3,7 +3,7 @@
 
 # Helper function to add a test executable
 function(add_klib_test name)
-    cmake_parse_arguments(TEST "" "" "SOURCES;LIBRARIES" ${ARGN})
+    cmake_parse_arguments(TEST "" "" "SOURCES;LIBRARIES;ARGS" ${ARGN})
 
     add_executable(${name} ${TEST_SOURCES})
     target_include_directories(${name} PRIVATE ${CMAKE_SOURCE_DIR})
@@ -12,7 +12,11 @@ function(add_klib_test name)
         target_link_libraries(${name} PRIVATE ${TEST_LIBRARIES})
     endif()
 
-    add_test(NAME ${name} COMMAND ${name})
+    if(TEST_ARGS)
+        add_test(NAME ${name} COMMAND ${name} ${TEST_ARGS})
+    else()
+        add_test(NAME ${name} COMMAND ${name})
+    endif()
 endfunction()
 
 # Find optional dependencies
@@ -28,19 +32,21 @@ add_klib_test(khash_keith SOURCES khash_keith.c)
 add_klib_test(khash_keith2 SOURCES khash_keith2.c)
 add_klib_test(klist_test SOURCES klist_test.c)
 add_klib_test(ksort_test SOURCES ksort_test.c)
-add_klib_test(ketopt_test SOURCES ketopt_test.c)
+add_klib_test(ketopt_test SOURCES ketopt_test.c ARGS -xy1 -x arg1 --foo --bar=test)
 add_klib_test(kbit_test SOURCES kbit_test.c)
 add_klib_test(kgraph_test SOURCES kgraph_test.c)
 add_klib_test(krmq_test SOURCES krmq_test.c)
 
 # Tests requiring ZLIB
 if(ZLIB_FOUND)
-    add_klib_test(kseq_test SOURCES kseq_test.c LIBRARIES ZLIB::ZLIB)
-    add_klib_test(kseq_bench SOURCES kseq_bench.c LIBRARIES ZLIB::ZLIB)
-    add_klib_test(kseq_bench2 SOURCES kseq_bench2.c LIBRARIES ZLIB::ZLIB)
-
-    # Copy test data file
-    configure_file(kseq_test.dat kseq_test.dat COPYONLY)
+    add_klib_test(kseq_test SOURCES kseq_test.c
+        LIBRARIES ZLIB::ZLIB
+        ARGS ${CMAKE_CURRENT_SOURCE_DIR}/kseq_test.dat)
+    add_klib_test(kseq_bench SOURCES kseq_bench.c
+        LIBRARIES ZLIB::ZLIB
+        ARGS ${CMAKE_CURRENT_SOURCE_DIR}/kseq_bench_data.txt.gz)
+    add_klib_test(kseq_bench2 SOURCES kseq_bench2.c
+        ARGS ${CMAKE_CURRENT_SOURCE_DIR}/kseq_bench_data.txt)
 endif()
 
 # C++ tests (for C++ compatibility)
@@ -87,6 +93,7 @@ if(KLIB_BUILD_COMPONENTS)
         add_klib_test(kthread_test2
             SOURCES kthread_test2.c
             LIBRARIES klib-kthread Threads::Threads
+            ARGS ${CMAKE_CURRENT_SOURCE_DIR}/kseq_bench_data.txt
         )
     endif()
 endif()
